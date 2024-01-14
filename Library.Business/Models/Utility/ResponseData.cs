@@ -3,7 +3,7 @@
     public class ResponseData<T>
     {
         public bool IsSuccess { get; set; } = true;
-        public string? Message { get; set; }
+        public Exception? ExceptionData { get; set; } = null!;
         public T? Data { get; set; }
     }
 }

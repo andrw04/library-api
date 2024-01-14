@@ -49,9 +49,19 @@ namespace Library.DataAccess.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includesProperties)
+        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includeProperties)
         {
-            return await _context.FindAsync<T>(id);
+            var query = _context.Set<T>().AsQueryable();
+
+            if (includeProperties.Any())
+            {
+                foreach (var property in includeProperties)
+                {
+                    query = query.Include(property);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task UpdateAsync(T item)

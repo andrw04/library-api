@@ -1,13 +1,14 @@
 ﻿using Library.Business.Models.Author;
+using Library.Business.Models.Utility;
 
 namespace Library.Business.Abstractions
 {
     public interface IAuthorService
     {
-        Task<ResponseAuthorDto?> GetAuthorById(int id);
-        Task<IEnumerable<ResponseAuthorDto>> GetAllAuthors();
-        Task CreateAuthor(RequestAuthorDto author);
-        Task DeleteAuthor(int id);
-        Task UpdateAuthor(int id, RequestAuthorDto author);
+        Task<ResponseData<ResponseAuthorDto?>> GetAuthorById(int id);
+        Task<ResponseData<IEnumerable<ResponseAuthorDto>>> GetAllAuthors();
+        Task<ResponseData<ResponseAuthorDto?>> CreateAuthor(RequestAuthorDto author);
+        Task<ResponseData<ResponseAuthorDto?>> DeleteAuthor(int id);
+        Task<ResponseData<ResponseAuthorDto?>> UpdateAuthor(int id, RequestAuthorDto author);
     }
 }
