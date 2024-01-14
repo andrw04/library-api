@@ -1,6 +1,9 @@
+using FluentValidation;
 using Library.Business.Abstractions;
 using Library.Business.Mapping;
+using Library.Business.Models.User;
 using Library.Business.Services;
+using Library.Business.Validators.User;
 using Library.DataAccess.Abstractions;
 using Library.DataAccess.Data;
 using Library.DataAccess.Repository;
@@ -9,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +50,8 @@ builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(typeof(ApplicationMappingProfile));
+
+builder.Services.AddScoped<IValidator<RequestUserDTO>, RequestUserValidator>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

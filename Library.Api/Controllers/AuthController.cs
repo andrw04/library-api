@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Library.DataAccess.Models;
 using Library.Business.Models.User;
 using Library.Business.Abstractions;
+using FluentValidation;
 
 namespace Library.Api.Controllers
 {
@@ -17,16 +18,28 @@ namespace Library.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
+        private readonly IValidator<RequestUserDTO> _validator;
 
-        public AuthController(IConfiguration configuration, IUserService userService)
+        public AuthController(
+            IConfiguration configuration,
+            IUserService userService,
+            IValidator<RequestUserDTO> validator)
         {
             _configuration = configuration;
             _userService = userService;
+            _validator = validator;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<ResponseUserDTO>> Register(RequestUserDTO request)
         {
+            var validationResult = _validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             request.Password = passwordHash;
@@ -44,6 +57,13 @@ namespace Library.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseUserDTO>> Login(RequestUserDTO request)
         {
+            var validationResult = _validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             var response = await _userService.GetUserByEmailAsync(request.Email);
 
             var existsUser = response.Data;
