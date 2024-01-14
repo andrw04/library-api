@@ -1,38 +1,84 @@
-﻿using Library.Business.Abstractions;
+﻿using AutoMapper;
+using Library.Business.Abstractions;
+using Library.Business.Models.Book;
+using Library.DataAccess.Abstractions;
 using Library.DataAccess.Models;
 
 namespace Library.Business.Services;
 
 public class BookService : IBookService
 {
-    public Task<Book?> GetBookById(int id)
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+    public BookService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+    public async Task<ResponseBookDto?> GetBookById(int id)
+    {
+        var book = await _unitOfWork.BookRepository.GetByIdAsync(
+            id,
+            b => b.Author,
+            b => b.Genre);
+
+        return _mapper.Map<ResponseBookDto>(book);
     }
 
-    public Task<Book?> GetBookByIsbn(string isbn)
+    public async Task<ResponseBookDto?> GetBookByIsbn(string isbn)
     {
-        throw new NotImplementedException();
+        var books = await _unitOfWork.BookRepository.GetAsync(
+            b => b.Isbn.Equals(isbn),
+            b => b.Author, b => b.Genre);
+
+        return _mapper.Map<ResponseBookDto>(books.FirstOrDefault());
     }
 
-    public Task<IEnumerable<Book>> GetAllBooks()
+    public async Task<IEnumerable<ResponseBookDto>> GetAllBooks()
     {
-        throw new NotImplementedException();
+        var books = await _unitOfWork.BookRepository.GetAsync(
+            null,
+            b => b.Author,
+            b => b.Genre);
+
+        return books.Select(b => _mapper.Map<ResponseBookDto>(b));
     }
 
-    public Task CreateBook(Book book)
+    public async Task CreateBook(RequestBookDto book)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _unitOfWork.BookRepository.AddAsync(_mapper.Map<Book>(book));
+
+            await _unitOfWork.SaveAllAsync();
+        }
+        catch
+        {
+            throw;
+        }
     }
 
-    public Task DeleteBook(int id)
+    public async Task DeleteBook(int id)
     {
-        throw new NotImplementedException();
+        var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
+
+        if (existsBook != null)
+        {
+            await _unitOfWork.BookRepository.DeleteAsync(existsBook);
+        }
+        else
+        {
+            throw new InvalidOperationException();
+        }
     }
 
-    public Task UpdateBook(int id, Book book)
+    public async Task UpdateBook(int id, RequestBookDto book)
     {
-        throw new NotImplementedException();
+        var existedBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
+
+        _mapper.Map(book, existedBook);
+
+        await _unitOfWork.BookRepository.UpdateAsync(existedBook!);
     }
 }
 

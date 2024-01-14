@@ -20,9 +20,11 @@ namespace Library.DataAccess.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(T item)
+        public async Task DeleteAsync(T item)
         {
-            throw new NotImplementedException();
+            _context.Remove(item);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAsync(
@@ -52,9 +54,11 @@ namespace Library.DataAccess.Repository
             return await _context.FindAsync<T>(id);
         }
 
-        public Task UpdateAsync(T item)
+        public async Task UpdateAsync(T item)
         {
-            throw new NotImplementedException();
+            _context.Entry(item).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

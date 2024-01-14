@@ -23,7 +23,7 @@ namespace Library.Business.Services
             {
                 var user = _mapper.Map<User>(requestUser);
 
-                await _unitOfWork.Users.AddAsync(user);
+                await _unitOfWork.UserRepository.AddAsync(user);
 
                 return new ResponseData<ResponseUserDto>()
                 { 
@@ -44,7 +44,7 @@ namespace Library.Business.Services
         {
             try
             {
-                var response = (await _unitOfWork.Users.GetAsync(u => u.Email == email));
+                var response = (await _unitOfWork.UserRepository.GetAsync(u => u.Email == email));
 
                 if (!response.Any())
                     throw new Exception("User is not found");

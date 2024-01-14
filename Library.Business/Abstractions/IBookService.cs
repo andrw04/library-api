@@ -1,12 +1,13 @@
-﻿using Library.DataAccess.Models;
+﻿using Library.Business.Models.Book;
+using Library.DataAccess.Models;
 
 namespace Library.Business.Abstractions;
 public interface IBookService
 {
-    Task<Book?> GetBookById(int id);
-    Task<Book?> GetBookByIsbn(string isbn);
-    Task<IEnumerable<Book>> GetAllBooks();
-    Task CreateBook(Book book);
+    Task<ResponseBookDto?> GetBookById(int id);
+    Task<ResponseBookDto?> GetBookByIsbn(string isbn);
+    Task<IEnumerable<ResponseBookDto>> GetAllBooks();
+    Task CreateBook(RequestBookDto book);
     Task DeleteBook(int id);
-    Task UpdateBook(int id, Book book);
+    Task UpdateBook(int id, RequestBookDto book);
 }

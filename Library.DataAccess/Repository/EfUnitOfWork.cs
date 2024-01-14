@@ -17,9 +17,9 @@ namespace Library.DataAccess.Repository
             _bookRepository = new Lazy<IRepository<Book>>(() => new EfRepository<Book>(context));
         }
 
-        public IRepository<Book> Books => _bookRepository.Value;
+        public IRepository<Book> BookRepository => _bookRepository.Value;
 
-        public IRepository<User> Users => _userRepository.Value!;
+        public IRepository<User> UserRepository => _userRepository.Value!;
 
         public async Task CreateDatabaseAsync()
         {
