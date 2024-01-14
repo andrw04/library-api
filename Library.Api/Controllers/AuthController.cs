@@ -1,11 +1,9 @@
 ﻿using BCrypt.Net;
-using Library.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using Library.DataAccess.Models;
 using Library.Business.Models.User;
 using Library.Business.Abstractions;
 using FluentValidation;
@@ -18,22 +16,25 @@ namespace Library.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
-        private readonly IValidator<RequestUserDTO> _validator;
+        private readonly IValidator<RequestUserDto> _registerValidator;
+        private readonly IValidator<LoginUserDto> _loginValidator;
 
         public AuthController(
             IConfiguration configuration,
             IUserService userService,
-            IValidator<RequestUserDTO> validator)
+            IValidator<RequestUserDto> regValidator,
+            IValidator<LoginUserDto> logValidator)
         {
             _configuration = configuration;
             _userService = userService;
-            _validator = validator;
+            _registerValidator = regValidator;
+            _loginValidator = logValidator;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<ResponseUserDTO>> Register(RequestUserDTO request)
+        public async Task<ActionResult<ResponseUserDto>> Register(RequestUserDto request)
         {
-            var validationResult = _validator.Validate(request);
+            var validationResult = _registerValidator.Validate(request);
 
             if (!validationResult.IsValid)
             {
@@ -55,32 +56,31 @@ namespace Library.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ResponseUserDTO>> Login(RequestUserDTO request)
+        public async Task<ActionResult<ResponseUserDto>> Login(LoginUserDto user)
         {
-            var validationResult = _validator.Validate(request);
+            var validationResult = _loginValidator.Validate(user);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
 
-            var response = await _userService.GetUserByEmailAsync(request.Email);
+            var response = await _userService.GetUserByEmailAsync(user.Email);
 
             var existsUser = response.Data;
 
             bool verified = existsUser != null &&
-                request.Username == existsUser.Username &&
-                BCrypt.Net.BCrypt.Verify(request.Password, existsUser.Password);
+                BCrypt.Net.BCrypt.Verify(user.Password, existsUser.Password);
 
             if (!verified)
-                return BadRequest("Username or password is wrong");
+                return BadRequest("Email or password is wrong");
 
             string token = CreateToken(response?.Data!);
 
             return Ok(token);
         }
 
-        private string CreateToken(ResponseUserDTO user)
+        private string CreateToken(ResponseUserDto user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("Jwt:Secret").Value!));

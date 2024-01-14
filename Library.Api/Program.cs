@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,11 +50,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(typeof(ApplicationMappingProfile));
 
-builder.Services.AddScoped<IValidator<RequestUserDTO>, RequestUserValidator>();
+builder.Services.AddScoped<IValidator<RequestUserDto>, RequestUserValidator>();
+builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserValidator>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "LibraryAPI", Version = "v1" });

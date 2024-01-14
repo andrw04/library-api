@@ -3,7 +3,7 @@ using Library.Business.Models.User;
 
 namespace Library.Business.Validators.User
 {
-    public class RequestUserValidator : AbstractValidator<RequestUserDTO>
+    public class RequestUserValidator : AbstractValidator<RequestUserDto>
     {
         public RequestUserValidator()
         {

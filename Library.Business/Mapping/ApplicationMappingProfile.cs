@@ -8,9 +8,9 @@ namespace Library.Business.Mapping
     {
         public ApplicationMappingProfile()
         {
-            CreateMap<User, ResponseUserDTO>();
+            CreateMap<User, ResponseUserDto>();
 
-            CreateMap<RequestUserDTO, User>();
+            CreateMap<RequestUserDto, User>();
         }
     }
 }

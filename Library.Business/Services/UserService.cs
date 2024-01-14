@@ -17,7 +17,7 @@ namespace Library.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<ResponseData<ResponseUserDTO>> CreateUser(RequestUserDTO requestUser)
+        public async Task<ResponseData<ResponseUserDto>> CreateUser(RequestUserDto requestUser)
         {
             try
             {
@@ -25,14 +25,14 @@ namespace Library.Business.Services
 
                 await _unitOfWork.Users.AddAsync(user);
 
-                return new ResponseData<ResponseUserDTO>()
+                return new ResponseData<ResponseUserDto>()
                 { 
                     Message = "Successfully created!"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseData<ResponseUserDTO>()
+                return new ResponseData<ResponseUserDto>()
                 {
                     IsSuccess = false,
                     Message = ex.Message
@@ -40,7 +40,7 @@ namespace Library.Business.Services
             }
         }
 
-        public async Task<ResponseData<ResponseUserDTO>> GetUserByEmailAsync(string email)
+        public async Task<ResponseData<ResponseUserDto>> GetUserByEmailAsync(string email)
         {
             try
             {
@@ -49,14 +49,14 @@ namespace Library.Business.Services
                 if (!response.Any())
                     throw new Exception("User is not found");
 
-                return new ResponseData<ResponseUserDTO>()
+                return new ResponseData<ResponseUserDto>()
                 {
-                    Data = _mapper.Map<ResponseUserDTO>(response.First())
+                    Data = _mapper.Map<ResponseUserDto>(response.First())
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseData<ResponseUserDTO>()
+                return new ResponseData<ResponseUserDto>()
                 {
                     IsSuccess = false,
                     Message = ex.Message

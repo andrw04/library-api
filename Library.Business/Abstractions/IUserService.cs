@@ -5,7 +5,7 @@ namespace Library.Business.Abstractions
 {
     public interface IUserService
     {
-        Task<ResponseData<ResponseUserDTO>> GetUserByEmailAsync(string email);
-        Task<ResponseData<ResponseUserDTO>> CreateUser(RequestUserDTO user);
+        Task<ResponseData<ResponseUserDto>> GetUserByEmailAsync(string email);
+        Task<ResponseData<ResponseUserDto>> CreateUser(RequestUserDto user);
     }
 }
