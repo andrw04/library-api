@@ -1,12 +1,5 @@
-using FluentValidation;
-using Library.Business.Abstractions;
-using Library.Business.Mapping;
-using Library.Business.Models.User;
-using Library.Business.Services;
-using Library.Business.Validators.User;
-using Library.DataAccess.Abstractions;
+using Library.Api.Extensions;
 using Library.DataAccess.Data;
-using Library.DataAccess.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -45,14 +38,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IBookService, BookService>();
-
-builder.Services.AddAutoMapper(typeof(ApplicationMappingProfile));
-
-builder.Services.AddScoped<IValidator<RequestUserDto>, RequestUserValidator>();
-builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserValidator>();
+// Add business logic services
+builder.Services.AddServices();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -5,158 +5,160 @@ using Library.Business.Models.Utility;
 using Library.DataAccess.Abstractions;
 using Library.DataAccess.Models;
 
-namespace Library.Business.Services;
-
-public class BookService : IBookService
+namespace Library.Business.Services
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    public BookService(IUnitOfWork unitOfWork, IMapper mapper)
+    public class BookService : IBookService
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
-    public async Task<ResponseData<ResponseBookDto?>> GetBookById(int id)
-    {
-        try
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public BookService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            var book = await _unitOfWork.BookRepository.GetByIdAsync(
-                id,
-                b => b.Author,
-                b => b.Genre);
-
-            return new ResponseData<ResponseBookDto?>
-            {
-                Data = _mapper.Map<ResponseBookDto>(book)
-            };
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
-        catch (Exception ex)
+        public async Task<ResponseData<ResponseBookDto?>> GetBookById(int id)
         {
-            return new ResponseData<ResponseBookDto?>
+            try
             {
-                Data = null,
-                IsSuccess = false,
-                ExceptionData = ex
-            };
-        }
-    }
+                var book = await _unitOfWork.BookRepository.GetByIdAsync(
+                    id,
+                    b => b.Author,
+                    b => b.Genre);
 
-    public async Task<ResponseData<ResponseBookDto?>> GetBookByIsbn(string isbn)
-    {
-        try
-        {
-            var books = await _unitOfWork.BookRepository.GetAsync(
-                b => b.Isbn.Equals(isbn),
-                b => b.Author, b => b.Genre);
-
-            return new ResponseData<ResponseBookDto?>
-            {
-                Data = _mapper.Map<ResponseBookDto>(books.First())
-            };
-        }
-        catch (Exception ex)
-        {
-            return new ResponseData<ResponseBookDto?>
-            {
-                Data = null,
-                IsSuccess = false,
-                ExceptionData = ex
-            };
-        }
-    }
-
-    public async Task<ResponseData<IEnumerable<ResponseBookDto>>> GetAllBooks()
-    {
-        try
-        {
-            var books = await _unitOfWork.BookRepository.GetAsync(
-                null,
-                b => b.Author,
-                b => b.Genre);
-
-            return new ResponseData<IEnumerable<ResponseBookDto>>
-            {
-                Data = books.Select(b => _mapper.Map<ResponseBookDto>(b))
-            };
-        }
-        catch (Exception ex)
-        {
-            return new ResponseData<IEnumerable<ResponseBookDto>>
-            {
-                Data = null,
-                IsSuccess = false,
-                ExceptionData = ex
-            };
-        }
-    }
-
-    public async Task<ResponseData<ResponseBookDto?>> CreateBook(RequestBookDto book)
-    {
-        try
-        {
-            await _unitOfWork.BookRepository.AddAsync(_mapper.Map<Book>(book));
-
-            await _unitOfWork.SaveAllAsync();
-
-            return new ResponseData<ResponseBookDto?>();
-        }
-        catch (Exception ex)
-        {
-            return new ResponseData<ResponseBookDto?>
-            {
-                Data = null,
-                IsSuccess = false,
-                ExceptionData = ex
-            };
-        }
-    }
-
-    public async Task<ResponseData<ResponseBookDto?>> DeleteBook(int id)
-    {
-        try
-        {
-            var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
-
-            if (existsBook == null)
-            {
-                throw new InvalidOperationException();
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = _mapper.Map<ResponseBookDto>(book)
+                };
             }
-
-            await _unitOfWork.BookRepository.DeleteAsync(existsBook);
-
-            return new ResponseData<ResponseBookDto?>();
-        }
-        catch (Exception ex)
-        {
-            return new ResponseData<ResponseBookDto?>
+            catch (Exception ex)
             {
-                Data = null,
-                IsSuccess = false,
-                ExceptionData = ex
-            };
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    ExceptionData = ex
+                };
+            }
+        }
+
+        public async Task<ResponseData<ResponseBookDto?>> GetBookByIsbn(string isbn)
+        {
+            try
+            {
+                var books = await _unitOfWork.BookRepository.GetAsync(
+                    b => b.Isbn.Equals(isbn),
+                    b => b.Author, b => b.Genre);
+
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = _mapper.Map<ResponseBookDto>(books.First())
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    ExceptionData = ex
+                };
+            }
+        }
+
+        public async Task<ResponseData<IEnumerable<ResponseBookDto>>> GetAllBooks()
+        {
+            try
+            {
+                var books = await _unitOfWork.BookRepository.GetAsync(
+                    null,
+                    b => b.Author,
+                    b => b.Genre);
+
+                return new ResponseData<IEnumerable<ResponseBookDto>>
+                {
+                    Data = books.Select(b => _mapper.Map<ResponseBookDto>(b))
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseData<IEnumerable<ResponseBookDto>>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    ExceptionData = ex
+                };
+            }
+        }
+
+        public async Task<ResponseData<ResponseBookDto?>> CreateBook(RequestBookDto book)
+        {
+            try
+            {
+                await _unitOfWork.BookRepository.AddAsync(_mapper.Map<Book>(book));
+
+                await _unitOfWork.SaveAllAsync();
+
+                return new ResponseData<ResponseBookDto?>();
+            }
+            catch (Exception ex)
+            {
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    ExceptionData = ex
+                };
+            }
+        }
+
+        public async Task<ResponseData<ResponseBookDto?>> DeleteBook(int id)
+        {
+            try
+            {
+                var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
+
+                if (existsBook == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                await _unitOfWork.BookRepository.DeleteAsync(existsBook);
+
+                return new ResponseData<ResponseBookDto?>();
+            }
+            catch (Exception ex)
+            {
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    ExceptionData = ex
+                };
+            }
+        }
+
+        public async Task<ResponseData<ResponseBookDto?>> UpdateBook(int id, RequestBookDto book)
+        {
+            try
+            {
+                var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
+
+                _mapper.Map(book, existsBook);
+
+                await _unitOfWork.BookRepository.UpdateAsync(existsBook!);
+
+                return new ResponseData<ResponseBookDto?>();
+            }
+            catch (Exception ex)
+            {
+                return new ResponseData<ResponseBookDto?>
+                {
+                    Data = null,
+                    IsSuccess = false,
+                    ExceptionData = ex
+                };
+            }
         }
     }
 
-    public async Task<ResponseData<ResponseBookDto?>> UpdateBook(int id, RequestBookDto book)
-    {
-        try
-        {
-            var existedBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
-
-            _mapper.Map(book, existedBook);
-
-            await _unitOfWork.BookRepository.UpdateAsync(existedBook!);
-
-            return new ResponseData<ResponseBookDto?>();
-        }
-        catch (Exception ex)
-        {
-            return new ResponseData<ResponseBookDto?>
-            {
-                Data = null,
-                IsSuccess = false,
-                ExceptionData = ex
-            };
-        }
-    }
 }

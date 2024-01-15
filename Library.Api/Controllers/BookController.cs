@@ -1,6 +1,6 @@
+using FluentValidation;
 using Library.Business.Abstractions;
 using Library.Business.Models.Book;
-using Library.DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,72 +11,103 @@ namespace Library.Api.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
-        public BookController(IBookService bookService)
+        private readonly IValidator<RequestBookDto> _validator;
+        public BookController(IBookService bookService, IValidator<RequestBookDto> validator)
         {
             _bookService = bookService;
+            _validator = validator;
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetBooks()
+        public async Task<IActionResult> GetBooks()
         {
-            var books = await _bookService.GetAllBooks();
+            var response = await _bookService.GetAllBooks();
 
-            if (books.Any())
+            if (response.IsSuccess)
             {
-                return Ok(books);
+                return Ok(response.Data);
             }
 
-            return NotFound();
+            return NotFound(response.ExceptionData?.Message);
         }
 
         [HttpGet("id:int")]
-        public async Task<ActionResult> GetBookById(int id)
+        public async Task<IActionResult> GetBookById(int id)
         {
-            var book = await _bookService.GetBookById(id);
+            var response = await _bookService.GetBookById(id);
 
-            if (book != null)
+            if (response.IsSuccess)
             {
-                return Ok(book);
+                return Ok(response.Data);
             }
 
-            return NotFound();
+            return BadRequest(response.ExceptionData?.Message);
         }
 
         [HttpGet("isbn")]
-        public async Task<ActionResult> GetBookByIsbn(string isbn)
+        public async Task<IActionResult> GetBookByIsbn(string isbn)
         {
-            var book = await _bookService.GetBookByIsbn(isbn);
+            var response = await _bookService.GetBookByIsbn(isbn);
 
-            if (book != null)
+            if (response.IsSuccess)
             {
-                return Ok(book);
+                return Ok(response.Data);
             }
 
-            return NotFound();
+            return BadRequest(response.ExceptionData?.Message);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateBook([FromBody] RequestBookDto book)
+        public async Task<IActionResult> CreateBook([FromBody] RequestBookDto book)
         {
-            await _bookService.CreateBook(book);
+            var validationResult = _validator.Validate(book);
 
-            return Ok();
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var response = await _bookService.CreateBook(book);
+
+            if (response.IsSuccess)
+            {
+                return Ok("Book successfully created");
+            }
+
+            return BadRequest(response.ExceptionData?.Message);
         }
 
         [HttpPut("id:int")]
-        public async Task<ActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
         {
-            await _bookService.UpdateBook(id, book);
+            var validationResult = _validator.Validate(book);
 
-            return Ok();
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var response = await _bookService.UpdateBook(id, book);
+
+            if (response.IsSuccess)
+            {
+                return Ok("Book successfully updated");
+            }
+
+            return BadRequest(response.ExceptionData?.Message);
         }
 
         [HttpDelete("id:int")]
-        public async Task<ActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook(int id)
         {
-            await _bookService.DeleteBook(id);
+            var response = await _bookService.DeleteBook(id);
 
-            return Ok();
+            if (response.IsSuccess)
+            {
+                return Ok("Book successfully deleted");
+            }
+
+            return BadRequest(response.ExceptionData?.Message);
         }
     }
 }

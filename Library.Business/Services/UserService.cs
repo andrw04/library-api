@@ -17,7 +17,7 @@ namespace Library.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<ResponseData<ResponseUserDto>> CreateUser(RequestUserDto requestUser)
+        public async Task<ResponseData<ResponseUserDto?>> CreateUser(RequestUserDto requestUser)
         {
             try
             {
@@ -25,22 +25,20 @@ namespace Library.Business.Services
 
                 await _unitOfWork.UserRepository.AddAsync(user);
 
-                return new ResponseData<ResponseUserDto>()
-                { 
-                    Message = "Successfully created!"
-                };
+                return new ResponseData<ResponseUserDto?>();
             }
             catch (Exception ex)
             {
-                return new ResponseData<ResponseUserDto>()
+                return new ResponseData<ResponseUserDto?>()
                 {
+                    Data = null,
                     IsSuccess = false,
-                    Message = ex.Message
+                    ExceptionData = ex
                 };
             }
         }
 
-        public async Task<ResponseData<ResponseUserDto>> GetUserByEmailAsync(string email)
+        public async Task<ResponseData<ResponseUserDto?>> GetUserByEmailAsync(string email)
         {
             try
             {
@@ -49,17 +47,18 @@ namespace Library.Business.Services
                 if (!response.Any())
                     throw new Exception("User is not found");
 
-                return new ResponseData<ResponseUserDto>()
+                return new ResponseData<ResponseUserDto?>()
                 {
                     Data = _mapper.Map<ResponseUserDto>(response.First())
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseData<ResponseUserDto>()
+                return new ResponseData<ResponseUserDto?>()
                 {
+                    Data = null,
                     IsSuccess = false,
-                    Message = ex.Message
+                    ExceptionData = ex
                 };
             }
         }

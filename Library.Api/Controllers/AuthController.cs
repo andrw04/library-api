@@ -52,7 +52,7 @@ namespace Library.Api.Controllers
                 return Ok("User successfully created");
             }
 
-            return BadRequest(response.Message);
+            return BadRequest(response.ExceptionData?.Message);
         }
 
         [HttpPost("login")]
@@ -69,8 +69,8 @@ namespace Library.Api.Controllers
 
             var existsUser = response.Data;
 
-            bool verified = existsUser != null &&
-                BCrypt.Net.BCrypt.Verify(user.Password, existsUser.Password);
+            bool verified = response.IsSuccess &&
+                BCrypt.Net.BCrypt.Verify(user.Password, existsUser?.Password);
 
             if (!verified)
                 return BadRequest("Email or password is wrong");

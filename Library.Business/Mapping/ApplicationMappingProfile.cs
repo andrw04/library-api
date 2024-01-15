@@ -12,14 +12,16 @@ namespace Library.Business.Mapping
         public ApplicationMappingProfile()
         {
             CreateMap<Author, ResponseAuthorDto>();
+            CreateMap<RequestAuthorDto, Author>();
 
             CreateMap<Genre, ResponseGenreDto>();
+            CreateMap<RequestGenreDto, Genre>();
 
             CreateMap<User, ResponseUserDto>();
             CreateMap<RequestUserDto, User>();
 
-            CreateMap<RequestBookDto, Book>();
             CreateMap<Book, ResponseBookDto>();
+            CreateMap<RequestBookDto, Book>();
         }
     }
 }
