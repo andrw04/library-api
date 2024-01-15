@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookController : ControllerBase
@@ -18,6 +19,7 @@ namespace Library.Api.Controllers
             _validator = validator;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetBooks()
         {
@@ -31,6 +33,7 @@ namespace Library.Api.Controllers
             return NotFound(response.ExceptionData?.Message);
         }
 
+        [AllowAnonymous]
         [HttpGet("id:int")]
         public async Task<IActionResult> GetBookById(int id)
         {
@@ -44,6 +47,7 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        [AllowAnonymous]
         [HttpGet("isbn")]
         public async Task<IActionResult> GetBookByIsbn(string isbn)
         {

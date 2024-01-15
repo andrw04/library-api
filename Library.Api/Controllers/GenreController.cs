@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Library.Business.Abstractions;
 using Library.Business.Models.Genre;
-using Library.Business.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GenreController : ControllerBase
@@ -19,6 +19,7 @@ namespace Library.Api.Controllers
             _validator = validator;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetGenres()
         {
@@ -32,6 +33,7 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        [AllowAnonymous]
         [HttpGet("id:int")]
         public async Task<IActionResult> GetGenreById(int id)
         {
