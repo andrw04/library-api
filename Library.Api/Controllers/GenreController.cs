@@ -19,6 +19,10 @@ namespace Library.Api.Controllers
             _validator = validator;
         }
 
+        /// <summary>
+        /// Returns all genres
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetGenres()
@@ -33,6 +37,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Returns genre by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("id:int")]
         public async Task<IActionResult> GetGenreById(int id)
@@ -47,6 +56,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Creates new genre
+        /// </summary>
+        /// <param name="genre"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateGenre([FromBody] RequestGenreDto genre)
         {
@@ -67,6 +81,12 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Updates genre by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="genre"></param>
+        /// <returns></returns>
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateGenre(int id, [FromBody] RequestGenreDto genre)
         {
@@ -87,6 +107,12 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+
+        /// <summary>
+        /// Deletes genre by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("id:int")]
         public async Task<IActionResult> DeleteGenre(int id)
         {

@@ -19,6 +19,10 @@ namespace Library.Api.Controllers
             _validator = validator;
         }
 
+        /// <summary>
+        /// Returns all books
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetBooks()
@@ -33,6 +37,11 @@ namespace Library.Api.Controllers
             return NotFound(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Returns book by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("id:int")]
         public async Task<IActionResult> GetBookById(int id)
@@ -47,6 +56,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Returns book by ISBN
+        /// </summary>
+        /// <param name="isbn"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("isbn")]
         public async Task<IActionResult> GetBookByIsbn(string isbn)
@@ -61,6 +75,12 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+
+        /// <summary>
+        /// Creates new book
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] RequestBookDto book)
         {
@@ -81,6 +101,12 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Updates book by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="book"></param>
+        /// <returns></returns>
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
         {
@@ -101,6 +127,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Deletes book by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("id:int")]
         public async Task<IActionResult> DeleteBook(int id)
         {

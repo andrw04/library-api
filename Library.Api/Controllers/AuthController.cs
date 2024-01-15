@@ -31,6 +31,11 @@ namespace Library.Api.Controllers
             _loginValidator = logValidator;
         }
 
+        /// <summary>
+        /// Creates a new user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<ActionResult<ResponseUserDto>> Register(RequestUserDto request)
         {
@@ -55,6 +60,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Returns jwt bearer
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public async Task<ActionResult<ResponseUserDto>> Login(LoginUserDto user)
         {
@@ -77,7 +87,7 @@ namespace Library.Api.Controllers
 
             string token = CreateToken(response?.Data!);
 
-            return Ok(token);
+            return Ok("Bearer " + token);
         }
 
         private string CreateToken(ResponseUserDto user)
@@ -85,7 +95,7 @@ namespace Library.Api.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("Jwt:Secret").Value!));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new Claim[]
             {
@@ -94,6 +104,8 @@ namespace Library.Api.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
+                issuer: _configuration.GetSection("Jwt:Issuer").Value!,
+                audience: _configuration.GetSection("Jwt:Audience").Value!,
                 expires: DateTime.UtcNow.AddMinutes(
                     int.Parse(_configuration.GetSection("Jwt:Expires").Value!)),
                 signingCredentials: creds

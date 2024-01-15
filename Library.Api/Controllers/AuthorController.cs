@@ -19,6 +19,10 @@ namespace Library.Api.Controllers
             _authorService = authorService;
         }
 
+        /// <summary>
+        /// Returns all authors
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> GetAuthors()
@@ -33,6 +37,11 @@ namespace Library.Api.Controllers
             return NotFound(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Returns author by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("id:int")]
         public async Task<ActionResult> GetAuthorById(int id)
@@ -47,6 +56,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Creates author
+        /// </summary>
+        /// <param name="author"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> CreateAuthor([FromBody] RequestAuthorDto author)
         {
@@ -66,6 +80,13 @@ namespace Library.Api.Controllers
 
             return BadRequest(response.ExceptionData?.Message);
         }
+
+        /// <summary>
+        /// Updates author by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="author"></param>
+        /// <returns></returns>
 
         [HttpPut("id:int")]
         public async Task<ActionResult> UpdateAuthor(int id, [FromBody] RequestAuthorDto author)
@@ -87,6 +108,11 @@ namespace Library.Api.Controllers
             return BadRequest(response.ExceptionData?.Message);
         }
 
+        /// <summary>
+        /// Deletes author by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("id:int")]
         public async Task<ActionResult> DeleteAuthor(int id)
         {

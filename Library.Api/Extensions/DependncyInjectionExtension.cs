@@ -19,25 +19,25 @@ namespace Library.Api.Extensions
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddTransient<IUnitOfWork, EfUnitOfWork>();
+            services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IBookService, BookService>();
-            services.AddTransient<IGenreService, GenreService>();
-            services.AddTransient<IAuthorService, AuthorService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<IAuthorService, AuthorService>();
 
 
             services.AddAutoMapper(typeof(ApplicationMappingProfile));
 
 
-            services.AddTransient<IValidator<RequestUserDto>, RequestUserValidator>();
-            services.AddTransient<IValidator<LoginUserDto>, LoginUserValidator>();
+            services.AddScoped<IValidator<RequestUserDto>, RequestUserValidator>();
+            services.AddScoped<IValidator<LoginUserDto>, LoginUserValidator>();
 
-            services.AddTransient<IValidator<RequestBookDto>, RequestBookValidator>();
+            services.AddScoped<IValidator<RequestBookDto>, RequestBookValidator>();
 
-            services.AddTransient<IValidator<RequestAuthorDto>, RequestAuthorValidator>();
+            services.AddScoped<IValidator<RequestAuthorDto>, RequestAuthorValidator>();
 
-            services.AddTransient<IValidator<RequestGenreDto>, RequestGenreValidator>();
+            services.AddScoped<IValidator<RequestGenreDto>, RequestGenreValidator>();
 
 
             return services;
