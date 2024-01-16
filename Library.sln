@@ -5,9 +5,11 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Api", "Library.Api\Library.Api.csproj", "{725820CB-F35F-4E78-8868-DD0CA031E200}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Business", "Library.Business\Library.Business.csproj", "{FB85FC6F-488D-4522-A4F4-3116A80AD192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Business", "Library.Business\Library.Business.csproj", "{FB85FC6F-488D-4522-A4F4-3116A80AD192}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.DataAccess", "Library.DataAccess\Library.DataAccess.csproj", "{FBDCA8A0-673E-4C1A-9984-8B5EEEAB77EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.DataAccess", "Library.DataAccess\Library.DataAccess.csproj", "{FBDCA8A0-673E-4C1A-9984-8B5EEEAB77EF}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A98ABA42-D3DC-44A5-A14C-77211875043C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{FBDCA8A0-673E-4C1A-9984-8B5EEEAB77EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBDCA8A0-673E-4C1A-9984-8B5EEEAB77EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBDCA8A0-673E-4C1A-9984-8B5EEEAB77EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98ABA42-D3DC-44A5-A14C-77211875043C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98ABA42-D3DC-44A5-A14C-77211875043C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98ABA42-D3DC-44A5-A14C-77211875043C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98ABA42-D3DC-44A5-A14C-77211875043C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

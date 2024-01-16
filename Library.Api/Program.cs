@@ -53,7 +53,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
 // Add business logic services
 builder.Services.AddServices();
