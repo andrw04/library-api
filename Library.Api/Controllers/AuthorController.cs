@@ -34,7 +34,7 @@ namespace Library.Api.Controllers
                 return Ok(response.Data);
             }
 
-            return NotFound(response.ExceptionData?.Message);
+            return NotFound("Something went wrong...");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Library.Api.Controllers
                 return Ok(response.Data);
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Library.Api.Controllers
                 return Ok("Author successfully created");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Library.Api.Controllers
                 return Ok("Author successfully updated");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Library.Api.Controllers
                 return Ok("Author successfully deleted");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
     }
 }

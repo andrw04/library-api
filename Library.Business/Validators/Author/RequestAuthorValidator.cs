@@ -7,7 +7,15 @@ namespace Library.Business.Validators.Author
     {
         public RequestAuthorValidator()
         {
-            
+            RuleFor(a => a.FirstName)
+                .NotNull()
+                .NotEmpty()
+                .MinimumLength(3);
+
+            RuleFor(a => a.LastName)
+                .NotNull()
+                .NotEmpty()
+                .MinimumLength(3);
         }
     }
 }

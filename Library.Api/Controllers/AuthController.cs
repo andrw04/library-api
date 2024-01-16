@@ -57,7 +57,7 @@ namespace Library.Api.Controllers
                 return Ok("User successfully created");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>

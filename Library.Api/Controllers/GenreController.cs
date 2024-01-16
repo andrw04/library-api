@@ -34,7 +34,7 @@ namespace Library.Api.Controllers
                 return Ok(response.Data);
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Library.Api.Controllers
                 return Ok(response.Data);
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Library.Api.Controllers
                 return Ok("Genre successfully created");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
 
         /// <summary>
@@ -104,9 +104,8 @@ namespace Library.Api.Controllers
                 return Ok("Genre successfully updated");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
-
 
         /// <summary>
         /// Deletes genre by id
@@ -123,7 +122,7 @@ namespace Library.Api.Controllers
                 return Ok("Genre successfully deleted");
             }
 
-            return BadRequest(response.ExceptionData?.Message);
+            return BadRequest("Something went wrong...");
         }
     }
 }
