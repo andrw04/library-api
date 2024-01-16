@@ -31,7 +31,7 @@ namespace Library.Api.Controllers
 
             if (response.IsSuccess)
             {
-                return Ok(response.Data);
+                return response.Data != null ? Ok(response.Data) : NotFound();
             }
 
             return NotFound("Something went wrong...");
@@ -50,7 +50,7 @@ namespace Library.Api.Controllers
 
             if (response.IsSuccess)
             {
-                return Ok(response.Data);
+                return response.Data != null ? Ok(response.Data) : NotFound();
             }
 
             return BadRequest("Something went wrong...");
