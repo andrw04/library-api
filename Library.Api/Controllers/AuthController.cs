@@ -22,26 +22,17 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
 
-    /*/// <summary>
+    /// <summary>
     /// Creates a new user
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost("register")]
-    public async Task<ActionResult> Register(RequestUserDto request)
+    public async Task<IActionResult> RegisterAsync([FromBody] RequestUserDto request)
     {
-        string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+        await _userService.RegisterAsync(request);
 
-        request.Password = passwordHash;
-
-        var response = await _userService.CreateUser(request);
-
-        if (response.IsSuccess)
-        {
-            return Ok("User successfully created");
-        }
-
-        return BadRequest("Something went wrong...");
+        return Created();
     }
 
     /// <summary>
@@ -50,46 +41,12 @@ public class AuthController : ControllerBase
     /// <param name="user"></param>
     /// <returns></returns>
     [HttpPost("login")]
-    public async Task<ActionResult<ResponseUserDto>> Login(LoginUserDto user)
+    public async Task<IActionResult> Login([FromBody] LoginUserDto user)
     {
-        var response = await _userService.GetUserByEmailAsync(user.Email);
+        var loggedUser = await _userService.LoginAsync(user);
 
-        var existsUser = response.Data;
-
-        bool verified = response.IsSuccess &&
-            BCrypt.Net.BCrypt.Verify(user.Password, existsUser?.Password);
-
-        if (!verified)
-            return BadRequest("Email or password is wrong");
-
-        string token = CreateToken(response?.Data!);
+        var token = _userService.CreateToken(loggedUser);
 
         return Ok("Bearer " + token);
     }
-
-    private string CreateToken(ResponseUserDto user)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            _configuration.GetSection("Jwt:Secret").Value!));
-
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var claims = new Claim[]
-        {
-            new Claim(ClaimTypes.Name, user.Username),
-        };
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            issuer: _configuration.GetSection("Jwt:Issuer").Value!,
-            audience: _configuration.GetSection("Jwt:Audience").Value!,
-            expires: DateTime.UtcNow.AddMinutes(
-                int.Parse(_configuration.GetSection("Jwt:Expires").Value!)),
-            signingCredentials: creds
-            );
-
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
-    }*/
 }

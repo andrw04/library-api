@@ -42,11 +42,7 @@ public class ExceptionMiddleware
             ValidationException e => new ErrorDetails
             {
                 StatusCode = 404,
-                Message = JsonSerializer.Serialize(e.Errors.Select(err => new
-                {
-                    Property = err.PropertyName,
-                    Value = err.ErrorMessage
-                }))
+                Message = string.Join(' ', e.Errors.Select(err => err.ErrorMessage).ToArray())
             },
             _ => new ErrorDetails
             {
