@@ -24,7 +24,7 @@ namespace Library.Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAuthorsAsync()
         {
-            var authors = await _authorService.GetAllAuthors();
+            var authors = await _authorService.GetAllAuthorsAsync();
 
             return Ok(authors);
         }
@@ -38,7 +38,7 @@ namespace Library.Api.Controllers
         [HttpGet("id:int")]
         public async Task<ActionResult> GetAuthorByIdAsync(int id)
         {
-            var author = await _authorService.GetAuthorById(id);
+            var author = await _authorService.GetAuthorByIdAsync(id);
 
             return Ok(author);
         }
@@ -51,7 +51,7 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAuthorAsync([FromBody] RequestAuthorDto author)
         {
-            await _authorService.CreateAuthor(author);
+            await _authorService.CreateAuthorAsync(author);
 
             return StatusCode(201);
         }
@@ -66,7 +66,7 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<ActionResult> UpdateAuthorAsync(int id, [FromBody] RequestAuthorDto author)
         {
-            await _authorService.UpdateAuthor(id, author);
+            await _authorService.UpdateAuthorAsync(id, author);
 
             return Ok();
         }
@@ -79,7 +79,7 @@ namespace Library.Api.Controllers
         [HttpDelete("id:int")]
         public async Task<ActionResult> DeleteAuthorAsync(int id)
         {
-            await _authorService.DeleteAuthor(id);
+            await _authorService.DeleteAuthorAsync(id);
 
             return StatusCode(204);
         }

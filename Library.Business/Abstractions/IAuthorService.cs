@@ -4,9 +4,9 @@ namespace Library.Business.Abstractions;
 
 public interface IAuthorService
 {
-    Task<ResponseAuthorDto> GetAuthorById(int id);
-    Task<IEnumerable<ResponseAuthorDto>> GetAllAuthors();
-    Task CreateAuthor(RequestAuthorDto author);
-    Task DeleteAuthor(int id);
-    Task UpdateAuthor(int id, RequestAuthorDto author);
+    Task<ResponseAuthorDto> GetAuthorByIdAsync(int id);
+    Task<IEnumerable<ResponseAuthorDto>> GetAllAuthorsAsync();
+    Task CreateAuthorAsync(RequestAuthorDto author);
+    Task DeleteAuthorAsync(int id);
+    Task UpdateAuthorAsync(int id, RequestAuthorDto author);
 }

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Library.Business.Abstractions;
+﻿using Library.Business.Abstractions;
 using Library.Business.Models.Genre;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +22,10 @@ namespace Library.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetGenres()
+        public async Task<IActionResult> GetGenresAsync()
         {
+            var genres = await _genreService.GetAllGenresAsync();
+
             return Ok();
         }
 
@@ -35,9 +36,11 @@ namespace Library.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("id:int")]
-        public async Task<IActionResult> GetGenreById(int id)
+        public async Task<IActionResult> GetGenreByIdAsync(int id)
         {
-            return Ok();
+            var genre = await _genreService.GetGenreByIdAsync(id);
+
+            return Ok(genre);
         }
 
         /// <summary>
@@ -46,9 +49,11 @@ namespace Library.Api.Controllers
         /// <param name="genre"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateGenre([FromBody] RequestGenreDto genre)
+        public async Task<IActionResult> CreateGenreAsync([FromBody] RequestGenreDto genre)
         {
-            return Ok();
+            await _genreService.CreateGenreAsync(genre);
+
+            return StatusCode(201);
         }
 
         /// <summary>
@@ -60,6 +65,8 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateGenre(int id, [FromBody] RequestGenreDto genre)
         {
+            await _genreService.UpdateGenreAsync(id, genre);
+
             return Ok();
         }
 
@@ -71,6 +78,8 @@ namespace Library.Api.Controllers
         [HttpDelete("id:int")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
+            await _genreService.DeleteGenreAsync(id);
+
             return Ok();
         }
     }
