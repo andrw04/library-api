@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Library.Business.Models.User;
 using Library.Business.Abstractions;
-using FluentValidation;
 
 namespace Library.Api.Controllers
 {
@@ -16,19 +15,11 @@ namespace Library.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
-        private readonly IValidator<RequestUserDto> _registerValidator;
-        private readonly IValidator<LoginUserDto> _loginValidator;
 
-        public AuthController(
-            IConfiguration configuration,
-            IUserService userService,
-            IValidator<RequestUserDto> regValidator,
-            IValidator<LoginUserDto> logValidator)
+        public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
             _userService = userService;
-            _registerValidator = regValidator;
-            _loginValidator = logValidator;
         }
 
         /// <summary>
@@ -39,12 +30,12 @@ namespace Library.Api.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ResponseUserDto>> Register(RequestUserDto request)
         {
-            var validationResult = _registerValidator.Validate(request);
+            /*var validationResult = _registerValidator.Validate(request);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
@@ -68,12 +59,12 @@ namespace Library.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseUserDto>> Login(LoginUserDto user)
         {
-            var validationResult = _loginValidator.Validate(user);
+/*            var validationResult = _loginValidator.Validate(user);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _userService.GetUserByEmailAsync(user.Email);
 

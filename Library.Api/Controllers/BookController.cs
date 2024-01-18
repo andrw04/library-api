@@ -12,11 +12,9 @@ namespace Library.Api.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookService _bookService;
-        private readonly IValidator<RequestBookDto> _validator;
-        public BookController(IBookService bookService, IValidator<RequestBookDto> validator)
+        public BookController(IBookService bookService)
         {
             _bookService = bookService;
-            _validator = validator;
         }
 
         /// <summary>
@@ -83,12 +81,12 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] RequestBookDto book)
         {
-            var validationResult = _validator.Validate(book);
+/*            var validationResult = _validator.Validate(book);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _bookService.CreateBook(book);
 
@@ -109,12 +107,12 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
         {
-            var validationResult = _validator.Validate(book);
+/*            var validationResult = _validator.Validate(book);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _bookService.UpdateBook(id, book);
 

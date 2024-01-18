@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Library.Business.Abstractions;
+﻿using Library.Business.Abstractions;
 using Library.Business.Models.Author;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +11,8 @@ namespace Library.Api.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
-        private readonly IValidator<RequestAuthorDto> _validator;
-        public AuthorController(IAuthorService authorService, IValidator<RequestAuthorDto> validator)
+        public AuthorController(IAuthorService authorService)
         {
-            _validator = validator;
             _authorService = authorService;
         }
 
@@ -64,12 +61,12 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAuthor([FromBody] RequestAuthorDto author)
         {
-            var validationResult = _validator.Validate(author);
+/*            var validationResult = _validator.Validate(author);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _authorService.CreateAuthor(author);
 
@@ -91,12 +88,12 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<ActionResult> UpdateAuthor(int id, [FromBody] RequestAuthorDto author)
         {
-            var validationResult = _validator.Validate(author);
+/*            var validationResult = _validator.Validate(author);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _authorService.UpdateAuthor(id, author);
 

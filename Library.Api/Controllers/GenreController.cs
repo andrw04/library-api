@@ -12,11 +12,9 @@ namespace Library.Api.Controllers
     public class GenreController : ControllerBase
     {
         private readonly IGenreService _genreService;
-        private readonly IValidator<RequestGenreDto> _validator;
-        public GenreController(IGenreService genreService, IValidator<RequestGenreDto> validator)
+        public GenreController(IGenreService genreService)
         {
             _genreService = genreService;
-            _validator = validator;
         }
 
         /// <summary>
@@ -64,12 +62,12 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGenre([FromBody] RequestGenreDto genre)
         {
-            var validationResult = _validator.Validate(genre);
+/*            var validationResult = _validator.Validate(genre);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _genreService.CreateGenre(genre);
 
@@ -90,12 +88,12 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateGenre(int id, [FromBody] RequestGenreDto genre)
         {
-            var validationResult = _validator.Validate(genre);
+/*            var validationResult = _validator.Validate(genre);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
-            }
+            }*/
 
             var response = await _genreService.UpdateGenre(id, genre);
 

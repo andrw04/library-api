@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Library.Business.Abstractions;
 using Library.Business.Models.Book;
 using Library.Business.Models.Genre;
@@ -12,15 +13,22 @@ namespace Library.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public GenreService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IValidator<RequestGenreDto> _validator;
+        public GenreService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IValidator<RequestGenreDto> validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _validator = validator;
         }
         public async Task<ResponseData<ResponseGenreDto?>> CreateGenre(RequestGenreDto genre)
         {
             try
             {
+                _validator.ValidateAndThrow(genre);
+
                 await _unitOfWork.GenreRepository.AddAsync(_mapper.Map<Genre>(genre));
 
                 await _unitOfWork.SaveAllAsync();
@@ -112,6 +120,8 @@ namespace Library.Business.Services
         {
             try
             {
+                _validator.ValidateAndThrow(genre);
+
                 var existsGenre = await _unitOfWork.GenreRepository.GetByIdAsync(id);
 
                 if (existsGenre == null)

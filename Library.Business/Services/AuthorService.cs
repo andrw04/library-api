@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Library.Business.Abstractions;
 using Library.Business.Models.Author;
 using Library.Business.Models.Utility;
@@ -11,15 +12,22 @@ namespace Library.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public AuthorService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IValidator<RequestAuthorDto> _validator;
+        public AuthorService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IValidator<RequestAuthorDto> validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _validator = validator;
         }
         public async Task<ResponseData<ResponseAuthorDto?>> CreateAuthor(RequestAuthorDto author)
         {
             try
             {
+                _validator.ValidateAndThrow(author);
+
                 await _unitOfWork.AuthorRepository.AddAsync(_mapper.Map<Author>(author));
 
                 await _unitOfWork.SaveAllAsync();
@@ -111,6 +119,8 @@ namespace Library.Business.Services
         {
             try
             {
+                _validator.ValidateAndThrow(author);
+
                 var existsAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
 
                 if (existsAuthor == null)
