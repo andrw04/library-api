@@ -62,13 +62,6 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGenre([FromBody] RequestGenreDto genre)
         {
-/*            var validationResult = _validator.Validate(genre);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _genreService.CreateGenre(genre);
 
             if (response.IsSuccess)
@@ -88,13 +81,6 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateGenre(int id, [FromBody] RequestGenreDto genre)
         {
-/*            var validationResult = _validator.Validate(genre);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _genreService.UpdateGenre(id, genre);
 
             if (response.IsSuccess)

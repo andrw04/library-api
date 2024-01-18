@@ -61,13 +61,6 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAuthor([FromBody] RequestAuthorDto author)
         {
-/*            var validationResult = _validator.Validate(author);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _authorService.CreateAuthor(author);
 
             if (response.IsSuccess)
@@ -88,13 +81,6 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<ActionResult> UpdateAuthor(int id, [FromBody] RequestAuthorDto author)
         {
-/*            var validationResult = _validator.Validate(author);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _authorService.UpdateAuthor(id, author);
 
             if (response.IsSuccess)

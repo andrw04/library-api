@@ -1,4 +1,3 @@
-using FluentValidation;
 using Library.Business.Abstractions;
 using Library.Business.Models.Book;
 using Microsoft.AspNetCore.Authorization;
@@ -81,13 +80,6 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] RequestBookDto book)
         {
-/*            var validationResult = _validator.Validate(book);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _bookService.CreateBook(book);
 
             if (response.IsSuccess)
@@ -107,13 +99,6 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
         {
-/*            var validationResult = _validator.Validate(book);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _bookService.UpdateBook(id, book);
 
             if (response.IsSuccess)

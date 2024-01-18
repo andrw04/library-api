@@ -30,13 +30,6 @@ namespace Library.Api.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ResponseUserDto>> Register(RequestUserDto request)
         {
-            /*var validationResult = _registerValidator.Validate(request);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             request.Password = passwordHash;
@@ -59,13 +52,6 @@ namespace Library.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseUserDto>> Login(LoginUserDto user)
         {
-/*            var validationResult = _loginValidator.Validate(user);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }*/
-
             var response = await _userService.GetUserByEmailAsync(user.Email);
 
             var existsUser = response.Data;
