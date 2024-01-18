@@ -3,128 +3,91 @@ using Library.Business.Models.Book;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Library.Api.Controllers
+namespace Library.Api.Controllers;
+
+[Authorize]
+[Route("api/[controller]")]
+[ApiController]
+public class BookController : ControllerBase
 {
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BookController : ControllerBase
+    private readonly IBookService _bookService;
+    public BookController(IBookService bookService)
     {
-        private readonly IBookService _bookService;
-        public BookController(IBookService bookService)
-        {
-            _bookService = bookService;
-        }
+        _bookService = bookService;
+    }
 
-        /// <summary>
-        /// Returns all books
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> GetBooks()
-        {
-            var response = await _bookService.GetAllBooks();
+    /// <summary>
+    /// Returns all books
+    /// </summary>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetBooksAsync()
+    {
+        return Ok(await _bookService.GetAllBooksAsync());
+    }
 
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
+    /// <summary>
+    /// Returns book by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpGet("id:int")]
+    public async Task<IActionResult> GetBookById(int id)
+    {
+        return Ok(await _bookService.GetBookByIdAsync(id));
+    }
 
-            return NotFound("Something went wrong...");
-        }
+    /// <summary>
+    /// Returns book by ISBN
+    /// </summary>
+    /// <param name="isbn"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpGet("isbn")]
+    public async Task<IActionResult> GetBookByIsbn(string isbn)
+    {
+        return Ok(await _bookService.GetBookByIsbnAsync(isbn));
+    }
 
-        /// <summary>
-        /// Returns book by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet("id:int")]
-        public async Task<IActionResult> GetBookById(int id)
-        {
-            var response = await _bookService.GetBookById(id);
+    /// <summary>
+    /// Creates new book
+    /// </summary>
+    /// <param name="book"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> CreateBook([FromBody] RequestBookDto book)
+    {
+        await _bookService.CreateBookAsync(book);
 
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
+        return Created();
+    }
 
-            return BadRequest("Something went wrong...");
-        }
+    /// <summary>
+    /// Updates book by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="book"></param>
+    /// <returns></returns>
+    [HttpPut("id:int")]
+    public async Task<IActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
+    {
+        await _bookService.UpdateBookAsync(id, book);
 
-        /// <summary>
-        /// Returns book by ISBN
-        /// </summary>
-        /// <param name="isbn"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet("isbn")]
-        public async Task<IActionResult> GetBookByIsbn(string isbn)
-        {
-            var response = await _bookService.GetBookByIsbn(isbn);
+        return Ok();
+    }
 
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
+    /// <summary>
+    /// Deletes book by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpDelete("id:int")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        await _bookService.DeleteBookAsync(id);
 
-            return BadRequest("Something went wrong...");
-        }
-
-        /// <summary>
-        /// Creates new book
-        /// </summary>
-        /// <param name="book"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> CreateBook([FromBody] RequestBookDto book)
-        {
-            var response = await _bookService.CreateBook(book);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Book successfully created");
-            }
-
-            return BadRequest("Something went wrong...");
-        }
-
-        /// <summary>
-        /// Updates book by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="book"></param>
-        /// <returns></returns>
-        [HttpPut("id:int")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] RequestBookDto book)
-        {
-            var response = await _bookService.UpdateBook(id, book);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Book successfully updated");
-            }
-
-            return BadRequest("Something went wrong...");
-        }
-
-        /// <summary>
-        /// Deletes book by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete("id:int")]
-        public async Task<IActionResult> DeleteBook(int id)
-        {
-            var response = await _bookService.DeleteBook(id);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Book successfully deleted");
-            }
-
-            return BadRequest("Something went wrong...");
-        }
+        return StatusCode(204);
     }
 }

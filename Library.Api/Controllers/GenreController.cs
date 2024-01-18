@@ -25,14 +25,7 @@ namespace Library.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetGenres()
         {
-            var response = await _genreService.GetAllGenres();
-
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -44,14 +37,7 @@ namespace Library.Api.Controllers
         [HttpGet("id:int")]
         public async Task<IActionResult> GetGenreById(int id)
         {
-            var response = await _genreService.GetGenreById(id);
-
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -62,14 +48,7 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGenre([FromBody] RequestGenreDto genre)
         {
-            var response = await _genreService.CreateGenre(genre);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Genre successfully created");
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -81,14 +60,7 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<IActionResult> UpdateGenre(int id, [FromBody] RequestGenreDto genre)
         {
-            var response = await _genreService.UpdateGenre(id, genre);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Genre successfully updated");
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -99,14 +71,7 @@ namespace Library.Api.Controllers
         [HttpDelete("id:int")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
-            var response = await _genreService.DeleteGenre(id);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Genre successfully deleted");
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
     }
 }

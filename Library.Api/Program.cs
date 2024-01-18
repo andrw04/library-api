@@ -36,6 +36,8 @@ builder.Services.AddSwagger();
 
 var app = builder.Build();
 
+app.UseCustomExcetionMiddleware();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

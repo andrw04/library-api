@@ -24,14 +24,7 @@ namespace Library.Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAuthors()
         {
-            var response = await _authorService.GetAllAuthors();
-
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
-
-            return NotFound("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -43,14 +36,7 @@ namespace Library.Api.Controllers
         [HttpGet("id:int")]
         public async Task<ActionResult> GetAuthorById(int id)
         {
-            var response = await _authorService.GetAuthorById(id);
-
-            if (response.IsSuccess)
-            {
-                return response.Data != null ? Ok(response.Data) : NotFound();
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -61,14 +47,7 @@ namespace Library.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAuthor([FromBody] RequestAuthorDto author)
         {
-            var response = await _authorService.CreateAuthor(author);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Author successfully created");
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -81,14 +60,7 @@ namespace Library.Api.Controllers
         [HttpPut("id:int")]
         public async Task<ActionResult> UpdateAuthor(int id, [FromBody] RequestAuthorDto author)
         {
-            var response = await _authorService.UpdateAuthor(id, author);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Author successfully updated");
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
 
         /// <summary>
@@ -99,14 +71,7 @@ namespace Library.Api.Controllers
         [HttpDelete("id:int")]
         public async Task<ActionResult> DeleteAuthor(int id)
         {
-            var response = await _authorService.DeleteAuthor(id);
-
-            if (response.IsSuccess)
-            {
-                return Ok("Author successfully deleted");
-            }
-
-            return BadRequest("Something went wrong...");
+            return Ok();
         }
     }
 }

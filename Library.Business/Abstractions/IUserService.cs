@@ -1,11 +1,10 @@
 ﻿using Library.Business.Models.User;
-using Library.Business.Models.Utility;
 
-namespace Library.Business.Abstractions
+namespace Library.Business.Abstractions;
+
+public interface IUserService
 {
-    public interface IUserService
-    {
-        Task<ResponseData<ResponseUserDto?>> GetUserByEmailAsync(string email);
-        Task<ResponseData<ResponseUserDto?>> CreateUser(RequestUserDto user);
-    }
+    Task<ResponseUserDto> GetUserByEmailAsync(string email);
+    Task<ResponseUserDto?> CreateUser(RequestUserDto user);
+    Task<string> CreateToken(ResponseUserDto user);
 }
