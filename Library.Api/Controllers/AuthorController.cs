@@ -22,9 +22,11 @@ namespace Library.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult> GetAuthors()
+        public async Task<ActionResult> GetAuthorsAsync()
         {
-            return Ok();
+            var authors = await _authorService.GetAllAuthors();
+
+            return Ok(authors);
         }
 
         /// <summary>
@@ -34,9 +36,11 @@ namespace Library.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("id:int")]
-        public async Task<ActionResult> GetAuthorById(int id)
+        public async Task<ActionResult> GetAuthorByIdAsync(int id)
         {
-            return Ok();
+            var author = await _authorService.GetAuthorById(id);
+
+            return Ok(author);
         }
 
         /// <summary>
@@ -45,9 +49,11 @@ namespace Library.Api.Controllers
         /// <param name="author"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> CreateAuthor([FromBody] RequestAuthorDto author)
+        public async Task<ActionResult> CreateAuthorAsync([FromBody] RequestAuthorDto author)
         {
-            return Ok();
+            await _authorService.CreateAuthor(author);
+
+            return StatusCode(201);
         }
 
         /// <summary>
@@ -58,8 +64,10 @@ namespace Library.Api.Controllers
         /// <returns></returns>
 
         [HttpPut("id:int")]
-        public async Task<ActionResult> UpdateAuthor(int id, [FromBody] RequestAuthorDto author)
+        public async Task<ActionResult> UpdateAuthorAsync(int id, [FromBody] RequestAuthorDto author)
         {
+            await _authorService.UpdateAuthor(id, author);
+
             return Ok();
         }
 
@@ -69,9 +77,11 @@ namespace Library.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("id:int")]
-        public async Task<ActionResult> DeleteAuthor(int id)
+        public async Task<ActionResult> DeleteAuthorAsync(int id)
         {
-            return Ok();
+            await _authorService.DeleteAuthor(id);
+
+            return StatusCode(204);
         }
     }
 }

@@ -61,7 +61,7 @@ public class BookController : ControllerBase
     {
         await _bookService.CreateBookAsync(book);
 
-        return Created();
+        return StatusCode(201);
     }
 
     /// <summary>

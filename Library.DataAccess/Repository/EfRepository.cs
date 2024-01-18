@@ -13,18 +13,18 @@ namespace Library.DataAccess.Repository
         {
             _context = context;
         }
-        public async Task AddAsync(T item)
+        public Task Add(T item)
         {
             _context.Add(item);
 
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(T item)
+        public Task Delete(T item)
         {
             _context.Remove(item);
 
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
         public async Task<IEnumerable<T>> GetAsync(
@@ -64,11 +64,11 @@ namespace Library.DataAccess.Repository
             return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task UpdateAsync(T item)
+        public Task Update(T item)
         {
             _context.Entry(item).State = EntityState.Modified;
 
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
     }
 }
