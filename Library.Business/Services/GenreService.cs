@@ -79,6 +79,8 @@ public class GenreService : IGenreService
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
+        _validator.ValidateAndThrow(genre);
+
         var genres = await _unitOfWork.GenreRepository.GetAsync(cancellationToken, g => g.Equals(genre.Name));
 
         var existsGenre = genres.FirstOrDefault();

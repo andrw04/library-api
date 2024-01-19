@@ -80,6 +80,8 @@ public class AuthorService : IAuthorService
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
+        _validator.ValidateAndThrow(author);
+
         var authors = await _unitOfWork.AuthorRepository.GetAsync(cancellationToken,
             a => a.FirstName.Equals(author.FirstName) && a.LastName.Equals(author.LastName));
 

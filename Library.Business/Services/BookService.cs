@@ -105,6 +105,8 @@ public class BookService : IBookService
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
+        _validator.ValidateAndThrow(book);
+
         var books = await _unitOfWork.BookRepository.GetAsync(
             cancellationToken,
             b => b.Isbn.Equals(book.Isbn) && b.AuthorId.Equals(book.AuthorId) && b.GenreId.Equals(book.GenreId));
