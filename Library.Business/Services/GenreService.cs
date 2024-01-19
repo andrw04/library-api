@@ -81,7 +81,7 @@ public class GenreService : IGenreService
 
         _validator.ValidateAndThrow(genre);
 
-        var genres = await _unitOfWork.GenreRepository.GetAsync(cancellationToken, g => g.Equals(genre.Name));
+        var genres = await _unitOfWork.GenreRepository.GetAsync(cancellationToken, g => g.Name.Equals(genre.Name));
 
         var existsGenre = genres.FirstOrDefault();
 
