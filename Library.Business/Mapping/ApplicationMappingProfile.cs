@@ -5,23 +5,22 @@ using Library.Business.Models.Genre;
 using Library.Business.Models.User;
 using Library.DataAccess.Models;
 
-namespace Library.Business.Mapping
+namespace Library.Business.Mapping;
+
+public class ApplicationMappingProfile : Profile
 {
-    public class ApplicationMappingProfile : Profile
+    public ApplicationMappingProfile()
     {
-        public ApplicationMappingProfile()
-        {
-            CreateMap<Author, ResponseAuthorDto>();
-            CreateMap<RequestAuthorDto, Author>();
+        CreateMap<Author, ResponseAuthorDto>();
+        CreateMap<RequestAuthorDto, Author>();
 
-            CreateMap<Genre, ResponseGenreDto>();
-            CreateMap<RequestGenreDto, Genre>();
+        CreateMap<Genre, ResponseGenreDto>();
+        CreateMap<RequestGenreDto, Genre>();
 
-            CreateMap<User, ResponseUserDto>();
-            CreateMap<RequestUserDto, User>();
+        CreateMap<User, ResponseUserDto>();
+        CreateMap<RequestUserDto, User>();
 
-            CreateMap<Book, ResponseBookDto>();
-            CreateMap<RequestBookDto, Book>();
-        }
+        CreateMap<Book, ResponseBookDto>();
+        CreateMap<RequestBookDto, Book>();
     }
 }

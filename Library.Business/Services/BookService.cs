@@ -23,58 +23,61 @@ public class BookService : IBookService
         _validator = validator;
     }
 
-    public async Task CreateBookAsync(RequestBookDto book)
+    public async Task CreateBookAsync(RequestBookDto book, CancellationToken cancellationToken = default)
     {
         _validator.ValidateAndThrow(book);
 
         var books = await _unitOfWork.BookRepository.GetAsync(
-        b => b.Isbn.Equals(book.Isbn),
-        b => b.Author, b => b.Genre);
+            cancellationToken,
+            b => b.Isbn.Equals(book.Isbn),
+            b => b.Author, b => b.Genre);
 
         var existsBook = books.FirstOrDefault();
 
         if (existsBook != null)
             throw new AlreadyExistsException(nameof(Book));
 
-        await _unitOfWork.BookRepository.AddAsync(_mapper.Map<Book>(book));
+        await _unitOfWork.BookRepository.AddAsync(_mapper.Map<Book>(book), cancellationToken);
 
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 
-    public async Task DeleteBookAsync(int id)
+    public async Task DeleteBookAsync(int id, CancellationToken cancellationToken = default)
     {
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
-        var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
+        var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id, cancellationToken);
 
         if (existsBook == null)
             throw new IsNotExistsException(nameof(Book));
 
-        await _unitOfWork.BookRepository.DeleteAsync(existsBook);
+        await _unitOfWork.BookRepository.DeleteAsync(existsBook, cancellationToken);
 
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<ResponseBookDto>> GetAllBooksAsync()
+    public async Task<IEnumerable<ResponseBookDto>> GetAllBooksAsync(CancellationToken cancellationToken = default)
     {
         var books = await _unitOfWork.BookRepository.GetAsync(
-           null,
-           b => b.Author,
-           b => b.Genre);
+            cancellationToken,
+            null,
+            b => b.Author,
+            b => b.Genre);
 
         return books.Select(b => _mapper.Map<ResponseBookDto>(b));
     }
 
-    public async Task<ResponseBookDto> GetBookByIdAsync(int id)
+    public async Task<ResponseBookDto> GetBookByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
         var book = await _unitOfWork.BookRepository.GetByIdAsync(
-        id,
-        b => b.Author,
-        b => b.Genre);
+            id,
+            cancellationToken,
+            b => b.Author,
+            b => b.Genre);
 
         if (book == null)
             throw new IsNotExistsException(nameof(Book));
@@ -82,11 +85,12 @@ public class BookService : IBookService
         return _mapper.Map<ResponseBookDto>(book);
     }
 
-    public async Task<ResponseBookDto> GetBookByIsbnAsync(string isbn)
+    public async Task<ResponseBookDto> GetBookByIsbnAsync(string isbn, CancellationToken cancellationToken = default)
     {
         var books = await _unitOfWork.BookRepository.GetAsync(
-           b => b.Isbn.Equals(isbn),
-           b => b.Author, b => b.Genre);
+            cancellationToken,
+            b => b.Isbn.Equals(isbn),
+            b => b.Author, b => b.Genre);
 
         var existsBook = books.FirstOrDefault();
 
@@ -96,20 +100,29 @@ public class BookService : IBookService
         return _mapper.Map<ResponseBookDto>(existsBook);
     }
 
-    public async Task UpdateBookAsync(int id, RequestBookDto book)
+    public async Task UpdateBookAsync(int id, RequestBookDto book, CancellationToken cancellationToken = default)
     {
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
-        var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
+        var books = await _unitOfWork.BookRepository.GetAsync(
+            cancellationToken,
+            b => b.Isbn.Equals(book.Isbn) && b.AuthorId.Equals(book.AuthorId) && b.GenreId.Equals(book.GenreId));
+
+        var existsBook = books.FirstOrDefault();
+
+        if (existsBook != null)
+            throw new AlreadyExistsException(nameof(Book));
+
+        existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id, cancellationToken);
 
         if (existsBook == null)
             throw new IsNotExistsException(nameof(Book));
 
         _mapper.Map(book, existsBook);
 
-        await _unitOfWork.BookRepository.UpdateAsync(existsBook!);
+        await _unitOfWork.BookRepository.UpdateAsync(existsBook!, cancellationToken);
 
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 }

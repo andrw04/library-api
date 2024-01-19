@@ -1,7 +1,6 @@
-﻿namespace Library.DataAccess.Models
+﻿namespace Library.DataAccess.Models;
+
+public class Entity
 {
-    public class Entity
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

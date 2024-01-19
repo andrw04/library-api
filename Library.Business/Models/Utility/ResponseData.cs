@@ -1,9 +1,8 @@
-﻿namespace Library.Business.Models.Utility
+﻿namespace Library.Business.Models.Utility;
+
+public class ResponseData<T>
 {
-    public class ResponseData<T>
-    {
-        public bool IsSuccess { get; set; } = true;
-        public Exception? ExceptionData { get; set; } = null!;
-        public T? Data { get; set; }
-    }
+    public bool IsSuccess { get; set; } = true;
+    public Exception? ExceptionData { get; set; } = null!;
+    public T? Data { get; set; }
 }

@@ -4,9 +4,9 @@ namespace Library.Business.Abstractions;
 
 public interface IGenreService
 {
-    Task<ResponseGenreDto> GetGenreByIdAsync(int id);
-    Task<IEnumerable<ResponseGenreDto>> GetAllGenresAsync();
-    Task CreateGenreAsync(RequestGenreDto genre);
-    Task DeleteGenreAsync(int id);
-    Task UpdateGenreAsync(int id, RequestGenreDto genre);
+    Task<ResponseGenreDto> GetGenreByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ResponseGenreDto>> GetAllGenresAsync(CancellationToken cancellationToken = default);
+    Task CreateGenreAsync(RequestGenreDto genre, CancellationToken cancellationToken = default);
+    Task DeleteGenreAsync(int id, CancellationToken cancellationToken = default);
+    Task UpdateGenreAsync(int id, RequestGenreDto genre, CancellationToken cancellationToken = default);
 }

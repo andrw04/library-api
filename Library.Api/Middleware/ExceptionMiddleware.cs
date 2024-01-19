@@ -1,11 +1,5 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using Library.Api.Models;
-using Microsoft.CodeAnalysis.Options;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using NuGet.Protocol;
-using System.Net;
-using System.Text.Json;
 
 namespace Library.Api.Middleware;
 

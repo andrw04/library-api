@@ -23,50 +23,50 @@ public class GenreService : IGenreService
         _validator = validator;
     }
 
-    public async Task CreateGenreAsync(RequestGenreDto genre)
+    public async Task CreateGenreAsync(RequestGenreDto genre, CancellationToken cancellationToken = default)
     {
         _validator.ValidateAndThrow(genre);
 
-        var genres = await _unitOfWork.GenreRepository.GetAsync(g => g.Equals(genre.Name));
+        var genres = await _unitOfWork.GenreRepository.GetAsync(cancellationToken, g => g.Equals(genre.Name));
 
         var existsGenre = genres.FirstOrDefault();
 
         if (existsGenre != null)
             throw new AlreadyExistsException(nameof(Genre));
 
-        await _unitOfWork.GenreRepository.AddAsync(_mapper.Map<Genre>(genre));
+        await _unitOfWork.GenreRepository.AddAsync(_mapper.Map<Genre>(genre), cancellationToken);
 
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 
-    public async Task DeleteGenreAsync(int id)
+    public async Task DeleteGenreAsync(int id, CancellationToken cancellationToken = default)
     {
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
-        var existsGenre = await _unitOfWork.GenreRepository.GetByIdAsync(id);
+        var existsGenre = await _unitOfWork.GenreRepository.GetByIdAsync(id, cancellationToken);
 
         if (existsGenre == null)
             throw new IsNotExistsException(nameof(Genre));
 
-        await _unitOfWork.GenreRepository.DeleteAsync(existsGenre);
+        await _unitOfWork.GenreRepository.DeleteAsync(existsGenre, cancellationToken);
 
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<ResponseGenreDto>> GetAllGenresAsync()
+    public async Task<IEnumerable<ResponseGenreDto>> GetAllGenresAsync(CancellationToken cancellationToken = default)
     {
-        var genres = await _unitOfWork.GenreRepository.GetAsync();
+        var genres = await _unitOfWork.GenreRepository.GetAsync(cancellationToken);
 
         return genres.Select(g => _mapper.Map<ResponseGenreDto>(g));
     }
 
-    public async Task<ResponseGenreDto> GetGenreByIdAsync(int id)
+    public async Task<ResponseGenreDto> GetGenreByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         if (id < 1)
             throw new ArgumentException("id should be greater than 0.");
 
-        var genre = await _unitOfWork.GenreRepository.GetByIdAsync(id);
+        var genre = await _unitOfWork.GenreRepository.GetByIdAsync(id, cancellationToken);
 
         if (genre == null)
             throw new IsNotExistsException(nameof(Genre));
@@ -74,20 +74,27 @@ public class GenreService : IGenreService
         return _mapper.Map<ResponseGenreDto>(genre);
     }
 
-    public async Task UpdateGenreAsync(int id, RequestGenreDto genre)
+    public async Task UpdateGenreAsync(int id, RequestGenreDto genre, CancellationToken cancellationToken = default)
     {
         if (id < 1)
             throw new ArgumentException("Id should be greater than 0.");
 
-        var existsGenre = await _unitOfWork.GenreRepository.GetByIdAsync(id);
+        var genres = await _unitOfWork.GenreRepository.GetAsync(cancellationToken, g => g.Equals(genre.Name));
+
+        var existsGenre = genres.FirstOrDefault();
+
+        if (existsGenre != null)
+            throw new AlreadyExistsException(nameof(Genre));
+
+        existsGenre = await _unitOfWork.GenreRepository.GetByIdAsync(id, cancellationToken);
 
         if (existsGenre == null)
             throw new IsNotExistsException(nameof(Genre));
 
         _mapper.Map(genre, existsGenre);
 
-        await _unitOfWork.GenreRepository.UpdateAsync(existsGenre!);
+        await _unitOfWork.GenreRepository.UpdateAsync(existsGenre!, cancellationToken);
 
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 }

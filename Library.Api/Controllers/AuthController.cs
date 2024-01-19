@@ -1,9 +1,4 @@
-﻿using BCrypt.Net;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.AspNetCore.Mvc;
 using Library.Business.Models.User;
 using Library.Business.Abstractions;
 
@@ -24,11 +19,13 @@ public class AuthController : ControllerBase
     /// Creates a new user
     /// </summary>
     /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RequestUserDto request)
+    public async Task<IActionResult> RegisterAsync(
+        [FromBody] RequestUserDto request, CancellationToken cancellationToken = default)
     {
-        await _userService.RegisterAsync(request);
+        await _userService.RegisterAsync(request, cancellationToken);
 
         return Created();
     }
@@ -37,11 +34,13 @@ public class AuthController : ControllerBase
     /// Returns jwt bearer
     /// </summary>
     /// <param name="user"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserDto user)
+    public async Task<IActionResult> Login(
+        [FromBody] LoginUserDto user, CancellationToken cancellationToken = default)
     {
-        var loggedUser = await _userService.LoginAsync(user);
+        var loggedUser = await _userService.LoginAsync(user, cancellationToken);
 
         var token = _userService.CreateToken(loggedUser);
 

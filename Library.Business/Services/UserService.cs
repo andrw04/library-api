@@ -59,30 +59,30 @@ public class UserService : IUserService
         return jwt;
     }
 
-    public async Task RegisterAsync(RequestUserDto user)
+    public async Task RegisterAsync(RequestUserDto user, CancellationToken cancellationToken = default)
     {
         _regValidator.ValidateAndThrow(user);
 
-        var users = await _unitOfWork.UserRepository.GetAsync(u => u.Email.Equals(user.Email));
+        var users = await _unitOfWork.UserRepository.GetAsync(cancellationToken, u => u.Email.Equals(user.Email));
         var existsUser = users.FirstOrDefault();
 
         if (existsUser != null)
-            throw new AlreadyExistsException("User");
+            throw new AlreadyExistsException(nameof(User));
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
         user.Password = passwordHash;
 
         var newUser = _mapper.Map<User>(user);
 
-        await _unitOfWork.UserRepository.AddAsync(newUser);
-        await _unitOfWork.SaveAllAsync();
+        await _unitOfWork.UserRepository.AddAsync(newUser, cancellationToken);
+        await _unitOfWork.SaveAllAsync(cancellationToken);
     }
 
-    public async Task<ResponseUserDto> LoginAsync(LoginUserDto user)
+    public async Task<ResponseUserDto> LoginAsync(LoginUserDto user, CancellationToken cancellationToken = default)
     {
         _logValidator.ValidateAndThrow(user);
 
-        var users = await _unitOfWork.UserRepository.GetAsync(u => u.Email.Equals(user.Email));
+        var users = await _unitOfWork.UserRepository.GetAsync(cancellationToken, u => u.Email.Equals(user.Email));
         var existsUser = users.FirstOrDefault();
 
         bool verified = existsUser != null && BCrypt.Net.BCrypt.Verify(user.Password, existsUser.Password);
