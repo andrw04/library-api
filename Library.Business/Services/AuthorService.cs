@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Library.Business.Abstractions;
+using Library.Business.Exceptions;
 using Library.Business.Models.Author;
-using Library.Business.Models.Utility;
 using Library.DataAccess.Abstractions;
 using Library.DataAccess.Models;
 
@@ -23,151 +23,72 @@ public class AuthorService : IAuthorService
         _validator = validator;
     }
 
-    public Task CreateAuthor(RequestAuthorDto author)
+    public async Task CreateAuthorAsync(RequestAuthorDto author)
     {
-        throw new NotImplementedException();
+        _validator.ValidateAndThrow(author);
+
+        var authors = await _unitOfWork.AuthorRepository.GetAsync(a 
+            => a.FirstName.Equals(author.FirstName) && a.LastName.Equals(author.LastName));
+
+        var existsAuthor = authors.FirstOrDefault();
+
+        if (existsAuthor != null)
+            throw new AlreadyExistsException(nameof(Author));
+
+        await _unitOfWork.AuthorRepository.AddAsync(_mapper.Map<Author>(author));
+
+        await _unitOfWork.SaveAllAsync();
     }
 
-    public Task DeleteAuthor(int id)
+    public async Task DeleteAuthorAsync(int id)
     {
-        throw new NotImplementedException();
+        if (id < 1)
+            throw new ArgumentException("Id should be greater than 0.");
+
+        var existsAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
+
+        if (existsAuthor == null)
+            throw new IsNotExistsException(nameof(Author));
+
+        await _unitOfWork.AuthorRepository.DeleteAsync(existsAuthor);
+
+        await _unitOfWork.SaveAllAsync();
     }
 
-    public Task<IEnumerable<ResponseAuthorDto>> GetAllAuthors()
+    public async Task<IEnumerable<ResponseAuthorDto>> GetAllAuthorsAsync()
     {
-        throw new NotImplementedException();
+        var authors = await _unitOfWork.AuthorRepository.GetAsync();
+
+        return authors.Select(a => _mapper.Map<ResponseAuthorDto>(a));
     }
 
-    public Task<ResponseAuthorDto> GetAuthorById(int id)
+    public async Task<ResponseAuthorDto> GetAuthorByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        if (id < 1)
+            throw new ArgumentException("Id should be greater than 0.");
+
+        var author = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
+
+        if (author == null)
+            throw new IsNotExistsException(nameof(Author));
+
+        return _mapper.Map<ResponseAuthorDto>(author);
     }
 
-    public Task UpdateAuthor(int id, RequestAuthorDto author)
+    public async Task UpdateAuthorAsync(int id, RequestAuthorDto author)
     {
-        throw new NotImplementedException();
+        if (id < 1)
+            throw new ArgumentException("Id should be greater than 0.");
+
+        var existsAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
+
+        if (existsAuthor == null)
+            throw new IsNotExistsException(nameof(Author));
+
+        _mapper.Map(author, existsAuthor);
+
+        await _unitOfWork.AuthorRepository.UpdateAsync(existsAuthor!);
+
+        await _unitOfWork.SaveAllAsync();
     }
-
-    /*       public async Task<ResponseData<ResponseAuthorDto?>> CreateAuthor(RequestAuthorDto author)
-   {
-       try
-       {
-           _validator.ValidateAndThrow(author);
-
-           await _unitOfWork.AuthorRepository.AddAsync(_mapper.Map<Author>(author));
-
-           await _unitOfWork.SaveAllAsync();
-
-           return new ResponseData<ResponseAuthorDto?>();
-       }
-       catch (Exception ex)
-       {
-           return new ResponseData<ResponseAuthorDto?>
-           {
-               IsSuccess = false,
-               Data = null,
-               ExceptionData = ex
-           };
-       }
-   }
-
-   public async Task<ResponseData<ResponseAuthorDto?>> DeleteAuthor(int id)
-   {
-       try
-       {
-           var existsAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
-
-           if (existsAuthor == null)
-           {
-               throw new InvalidOperationException();
-           }
-
-           await _unitOfWork.AuthorRepository.DeleteAsync(existsAuthor);
-
-           return new ResponseData<ResponseAuthorDto?>();
-       }
-       catch (Exception ex)
-       {
-           return new ResponseData<ResponseAuthorDto?>
-           {
-               IsSuccess = false,
-               Data = null,
-               ExceptionData = ex
-           };
-       }
-   }
-
-   public async Task<ResponseData<IEnumerable<ResponseAuthorDto>>> GetAllAuthors()
-   {
-       try
-       {
-           var authors = await _unitOfWork.AuthorRepository.GetAsync();
-
-           return new ResponseData<IEnumerable<ResponseAuthorDto>>
-           {
-               Data = authors.Select(g => _mapper.Map<ResponseAuthorDto>(g))
-           };
-       }
-       catch (Exception ex)
-       {
-           return new ResponseData<IEnumerable<ResponseAuthorDto>>
-           {
-               Data = null,
-               IsSuccess = false,
-               ExceptionData = ex
-           };
-       }
-   }
-
-   public async Task<ResponseData<ResponseAuthorDto?>> GetAuthorById(int id)
-   {
-       try
-       {
-           var author = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
-
-           return new ResponseData<ResponseAuthorDto?>
-           {
-               Data = _mapper.Map<ResponseAuthorDto>(author)
-           };
-       }
-       catch (Exception ex)
-       {
-           return new ResponseData<ResponseAuthorDto?>
-           {
-               Data = null,
-               IsSuccess = false,
-               ExceptionData = ex
-           };
-       }
-   }
-
-   public async Task<ResponseData<ResponseAuthorDto?>> UpdateAuthor(int id, RequestAuthorDto author)
-   {
-       try
-       {
-           _validator.ValidateAndThrow(author);
-
-           var existsAuthor = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
-
-           if (existsAuthor == null)
-           {
-               throw new InvalidOperationException();
-           }
-
-           _mapper.Map(author, existsAuthor);
-
-           await _unitOfWork.AuthorRepository.UpdateAsync(existsAuthor!);
-
-           return new ResponseData<ResponseAuthorDto?>();
-       }
-       catch (Exception ex)
-       {
-           return new ResponseData<ResponseAuthorDto?>
-           {
-               Data = null,
-               IsSuccess = false,
-               ExceptionData = ex
-           };
-       }
-   }*/
 }

@@ -4,9 +4,9 @@ namespace Library.DataAccess.Abstractions
 {
     public interface IRepository<T>
     {
-        Task Add(T item);
-        Task Update(T item);
-        Task Delete(T item);
+        Task AddAsync(T item);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(T item);
         Task<IEnumerable<T>> GetAsync(
             Expression<Func<T, bool>>? filter = null,
             params Expression<Func<T, object>>[] includeProperties);

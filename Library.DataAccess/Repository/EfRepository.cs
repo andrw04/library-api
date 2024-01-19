@@ -13,14 +13,14 @@ namespace Library.DataAccess.Repository
         {
             _context = context;
         }
-        public Task Add(T item)
+        public Task AddAsync(T item)
         {
             _context.Add(item);
 
             return Task.CompletedTask;
         }
 
-        public Task Delete(T item)
+        public Task DeleteAsync(T item)
         {
             _context.Remove(item);
 
@@ -64,7 +64,7 @@ namespace Library.DataAccess.Repository
             return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public Task Update(T item)
+        public Task UpdateAsync(T item)
         {
             _context.Entry(item).State = EntityState.Modified;
 

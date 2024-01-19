@@ -34,7 +34,7 @@ public class BookService : IBookService
         var existsBook = books.FirstOrDefault();
 
         if (existsBook != null)
-            throw new AlreadyExistsException("Book");
+            throw new AlreadyExistsException(nameof(Book));
 
         await _unitOfWork.BookRepository.AddAsync(_mapper.Map<Book>(book));
 
@@ -49,7 +49,7 @@ public class BookService : IBookService
         var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
 
         if (existsBook == null)
-            throw new IsNotExistsException("Book");
+            throw new IsNotExistsException(nameof(Book));
 
         await _unitOfWork.BookRepository.DeleteAsync(existsBook);
 
@@ -77,7 +77,7 @@ public class BookService : IBookService
         b => b.Genre);
 
         if (book == null)
-            throw new IsNotExistsException("Book");
+            throw new IsNotExistsException(nameof(Book));
 
         return _mapper.Map<ResponseBookDto>(book);
     }
@@ -91,7 +91,7 @@ public class BookService : IBookService
         var existsBook = books.FirstOrDefault();
 
         if (existsBook == null)
-            throw new IsNotExistsException("Book");
+            throw new IsNotExistsException(nameof(Book));
 
         return _mapper.Map<ResponseBookDto>(existsBook);
     }
@@ -104,7 +104,7 @@ public class BookService : IBookService
         var existsBook = await _unitOfWork.BookRepository.GetByIdAsync(id);
 
         if (existsBook == null)
-            throw new IsNotExistsException("Book");
+            throw new IsNotExistsException(nameof(Book));
 
         _mapper.Map(book, existsBook);
 

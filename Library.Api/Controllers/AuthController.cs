@@ -13,12 +13,10 @@ namespace Library.Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
     private readonly IUserService _userService;
 
-    public AuthController(IConfiguration configuration, IUserService userService)
+    public AuthController(IUserService userService)
     {
-        _configuration = configuration;
         _userService = userService;
     }
 

@@ -63,7 +63,7 @@ namespace Library.Api.Controllers
         /// <param name="genre"></param>
         /// <returns></returns>
         [HttpPut("id:int")]
-        public async Task<IActionResult> UpdateGenre(int id, [FromBody] RequestGenreDto genre)
+        public async Task<IActionResult> UpdateGenreAsync(int id, [FromBody] RequestGenreDto genre)
         {
             await _genreService.UpdateGenreAsync(id, genre);
 
@@ -76,7 +76,7 @@ namespace Library.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("id:int")]
-        public async Task<IActionResult> DeleteGenre(int id)
+        public async Task<IActionResult> DeleteGenreAsync(int id)
         {
             await _genreService.DeleteGenreAsync(id);
 
